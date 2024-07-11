@@ -1,26 +1,34 @@
+import os
+
 from aiogram import Bot, Dispatcher, types
 import asyncio
 from aiogram.filters import CommandStart
-from data.config import TOKEN
+from aiogram.types import BotCommandScopeAllPrivateChats
 
+from config import TOKEN
+
+# from dotenv import find_dotenv, load_dotenv
+# load_dotenv(find_dotenv())
+
+from handlers.user_private import user_private_router
+from handlers.user_group import user_group_router
+from common.bot_cmds_list import private
+
+ALLOWES_UPDATES = ['message, edited_message']
+
+# bot = Bot(token=os.getenv(TOKEN))
 bot = Bot(token=TOKEN)
 dp = Dispatcher()
 
-
-@dp.message(CommandStart())
-async def start_cmd(message: types.Message) -> None:
-    await message.answer('Это была команда старт')
-
-
-@dp.message()
-async def echo(message: types.Message):
-    await message.answer(message.text)  # просто ответит
-    await message.reply(message.text)  # упомянет автора
+dp.include_router(user_private_router)
+dp.include_router(user_group_router)
 
 
 async def main() -> None:
     await bot.delete_webhook(drop_pending_updates=True)  # сбрасывает старые обновления во время не работы
-    await dp.start_polling(bot)
+    # await bot.delete_my_commands(scope=types.BotCommandScopeAllPrivateChats())  # Удалит кнопки
+    await bot.set_my_commands(commands=private, scope=types.BotCommandScopeAllPrivateChats())
+    await dp.start_polling(bot, allowed_updates=ALLOWES_UPDATES)
 
 
 asyncio.run(main())
