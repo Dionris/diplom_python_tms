@@ -2,9 +2,13 @@ import os
 
 from aiogram import Bot, Dispatcher, types
 import asyncio
+
+from aiogram.client.default import DefaultBotProperties
+from aiogram.enums import ParseMode
 from aiogram.filters import CommandStart
 from aiogram.types import BotCommandScopeAllPrivateChats
 
+import config
 from config import TOKEN
 
 # from dotenv import find_dotenv, load_dotenv
@@ -17,7 +21,7 @@ from common.bot_cmds_list import private
 ALLOWES_UPDATES = ['message, edited_message']
 
 # bot = Bot(token=os.getenv(TOKEN))
-bot = Bot(token=TOKEN)
+bot = Bot(token=config.TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
 dp = Dispatcher()
 
 dp.include_router(user_private_router)
