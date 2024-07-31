@@ -10,8 +10,16 @@ from database.models import Base
 #
 # load_dotenv(find_dotenv())
 
+
+# DB_LITE = 'sqlite+aiosqlite:///base.db'
+
 # engine = create_async_engine(os.getenv('DB_LITE'), echo=True)
-engine = create_async_engine(config.DB_LITE, echo=True)
+# engine = create_async_engine(config.DB_LITE, echo=True)
+
+
+# DB_POSTGRESQL = 'postgresql+asyncpg://username:password@localhost:5432/namedatabase'
+
+engine = create_async_engine(config.DB_POSTGRESQL, echo=True)
 
 
 session_maker = async_sessionmaker(bind=engine, class_=AsyncSession, expire_on_commit=False)
